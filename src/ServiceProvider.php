@@ -1,6 +1,6 @@
-<?php namespace Sikei\Bref\Sqs\Laravel;
+<?php namespace Apsonex\BrefSqs\Sqs\Laravel;
 
-use Sikei\Bref\Sqs\Laravel\Commands\SqsWorkCommand;
+use Apsonex\BrefSqs\Sqs\Laravel\Commands\SqsWorkCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

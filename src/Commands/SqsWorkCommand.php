@@ -1,17 +1,17 @@
-<?php namespace Sikei\Bref\Sqs\Laravel\Commands;
+<?php namespace Apsonex\BrefSqs\Sqs\Laravel\Commands;
 
 use Bref\Runtime\LambdaRuntime;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Queue\Console\WorkCommand;
 use Illuminate\Queue\Worker;
-use Sikei\Bref\Sqs\Laravel\Queue\Connector;
-use Sikei\Bref\Sqs\Laravel\Queue\Queue;
+use Apsonex\BrefSqs\Sqs\Laravel\Queue\Connector;
+use Apsonex\BrefSqs\Sqs\Laravel\Queue\Queue;
 
 class SqsWorkCommand extends WorkCommand
 {
 
-	protected $signature = 'sqs:work
+    protected $signature = 'sqs:work
                             {connection? : The name of the queue connection to work}
                             {--name=default : The name of the worker}
                             {--queue= : The names of the queues to work}
@@ -48,7 +48,7 @@ class SqsWorkCommand extends WorkCommand
 
     public function handle()
     {
-        $this->lambdaRuntime = LambdaRuntime::fromEnvironmentVariable();
+        $this->lambdaRuntime = LambdaRuntime::fromEnvironmentVariable('console');
 
         // Add custom connector, which will expose the "fill" method for the SQS event
         $this->worker->getManager()->addConnector('sqs', function () {
@@ -72,14 +72,19 @@ class SqsWorkCommand extends WorkCommand
         $queue->setContainer($this->laravel);
 
         while (true) {
-            $this->lambdaRuntime->processNextEvent(function (array $event) use ($connection, $queueName, $queue) : array {
-                $queue->fill($event);
+            $this->lambdaRuntime->processNextEvent(function (array $event) use ($connection, $queueName, $queue): array {
+                try {
+                    $queue->fill($event);
 
-                while ($queue->size($queue) > 0) {
-                    $this->worker->runNextJob($connection, $queueName, $this->gatherWorkerOptions());
+                    while ($queue->size($queue) > 0) {
+                        $this->worker->runNextJob($connection, $queueName, $this->gatherWorkerOptions());
+                    }
+                    return [];
+                } finally {
+                    if (app()->resolved('db') && ($_ENV['QUEUE_DATABASE_SESSION_PERSIST'] ?? false) !== 'true') {
+                        collect(app()->make('db')->getConnections())->each->disconnect();
+                    }
                 }
-
-                return [];
             });
         }
     }

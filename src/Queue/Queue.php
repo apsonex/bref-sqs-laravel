@@ -1,4 +1,4 @@
-<?php namespace Sikei\Bref\Sqs\Laravel\Queue;
+<?php namespace Apsonex\BrefSqs\Sqs\Laravel\Queue;
 
 use Illuminate\Container\Container;
 use Illuminate\Queue\Queue as BaseQueue;

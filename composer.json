@@ -1,5 +1,5 @@
 {
-  "name": "christoph-kluge/bref-sqs-laravel",
+  "name": "apsonex/bref-sqs-laravel",
   "description": "Laravel adapter for bref",
   "type": "library",
   "license": "MIT",
@@ -10,24 +10,23 @@
     }
   ],
   "require": {
-    "bref/bref": "^0.5|^1.2.0"
-  },
-  "require-dev": {
+    "bref/bref": "^1.4",
+    "laravel/framework": "^8.76"
   },
   "autoload": {
     "psr-4": {
-      "Sikei\\Bref\\Sqs\\Laravel\\": "src/"
+      "Apsonex\\BrefSqsLaravel\\Sqs\\Laravel\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Sikei\\Bref\\Tests\\Sqs\\Laravel\\": "tests/"
+      "Apsonex\\BrefSqsLaravel\\Tests\\Sqs\\Laravel\\": "tests/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Sikei\\Bref\\Sqs\\Laravel\\ServiceProvider"
+        "Apsonex\\BrefSqsLaravel\\Sqs\\Laravel\\ServiceProvider"
       ]
     }
   }

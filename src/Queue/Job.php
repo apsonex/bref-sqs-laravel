@@ -1,4 +1,4 @@
-<?php namespace Sikei\Bref\Sqs\Laravel\Queue;
+<?php namespace Apsonex\BrefSqs\Sqs\Laravel\Queue;
 
 use Illuminate\Queue\Jobs\SqsJob;
 
